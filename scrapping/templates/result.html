@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped and Translated Data</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-title {
+            color: #007bff;
+        }
+        .error-message {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="container" id="maincontainer">
+       
+        <h1 class="text-center mb-4">Scraped and Translated Data</h1>
+        {% if error_message %}
+            <div class="alert alert-danger error-message" role="alert">
+                {{ error_message }}
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Card for Scraped Data -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Scraped Data</h5>
+                            <p class="card-text">{{ scraped_text }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <!-- Card for Translated Data -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Translated Data</h5>
+                            <p class="card-text">{{ translated_text }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h1 class="text-center mb-4">Summary And Keywords</h1>
+                    <!-- Card for Summary -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Summary</h5>
+                            <p class="card-text">{{ summary }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <!-- Card for Keywords -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Keywords</h5>
+                            <ul>
+                                {% for keyword in keywords %}
+                                    <li>{{ keyword }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mb-4 mr-5">
+                    <button id="pdf-button" class="action-btn hide-in-pdf" onclick="savePage()">DOWNLOAD PDF</button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+    <script type="text/javascript">
+      function savePage() {
+        console.log("Attempting to generate PDF...");
+
+       
+        var pdfButton = document.getElementById("pdf-button");
+        pdfButton.style.display = "none";
+
+       
+        var html = document.documentElement;
+
+      
+        var options = {
+          margin: [10, 10],
+          filename: "SCRAP DATA AND SUMMERY.pdf", 
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, 
+        };
+
+        
+        html2pdf()
+          .set(options)
+          .from(html)
+          .save()
+          .then(function () {
+            console.log("PDF generated successfully.");
+            
+            pdfButton.style.display = "inline-block";
+          })
+          .catch(function (error) {
+            console.error("Error generating PDF:", error);
+            
+            pdfButton.style.display = "inline-block";
+          });
+      }
+    </script>
+
+</body>
+</html>
